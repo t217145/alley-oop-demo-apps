@@ -1,17 +1,31 @@
 apiVersion: automation.cloudbees.io/v1alpha1
 kind: workflow
 name: My workflow
-
 on:
   push:
     branches:
-      - '**'
-
+      - "**"
+  workflow_dispatch:
+    inputs:
+      repo_name:
+        type: string
+        default: t217145/alley-oop-demo-apps
+        required: true
+        description: Repository Name (do not include the https://github.com/) E.g. t217145/alley-oop-demo-apps
+      repo_url:
+        type: string
+        default: https://github.com/
+        description: Repository URL. Default is https://github.com
 jobs:
-  build:
+  Checkout:
+    environment: sandbox
     steps:
-      - name: Say hello
-        uses: docker://golang:1.20.3-alpine3.17
-        shell: sh
-        run: |
-          echo "hello world"
+      - uses: cloudbees-io/checkout@v1
+        name: checkout
+        with:
+          provider: github
+          repository: ${{inputs.repo_name}}
+          ref: master
+          token: ${{secrets.GITHUB_TOKEN}}
+          path: ./simple_java_app/
+          github-server-url: ${{inputs.repo_url}}
