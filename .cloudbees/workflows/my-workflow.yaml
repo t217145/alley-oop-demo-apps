@@ -45,11 +45,6 @@ jobs:
             entrypoint: ''
         run: |
             cd ./app
-            gradle clean build -PappVersion=${{ inputs.appVersion }}  -PappName=app
-            curl -fL https://getcli.jfrog.io | sh
-            ./jfrog config add jfrog --url ${{ vars.JFROG_URL }} --access-token ${{ secrets.JFROG_TOKEN }} --interactive=false
-            ./jfrog rt u ./build/libs/${{ inputs.appName }}-${{ inputs.appVersion }}.jar ${{ vars.JFROG_REPO }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar
-            ./jfrog rt u ./Dockerfile ${{ vars.JFROG_REPO }}/Dockerfile
-    #   - name: Upload to JFrog
-    #     uses: docker://nginx:latest
-    #     run: |
+            gradle clean build -PappVersion=${{ inputs.appVersion }}  -PappName=${{ inputs.appName }}
+            curl -H "X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}" -X PUT "${{ vars.JFROG_URL }}/artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar" -T ./build/libs/${{ inputs.appName }}-${{ inputs.appVersion }}.jar
+            curl -H "X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}" -X PUT "${{ vars.JFROG_URL }}/artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile" -T ./build/libs/Dockerfile
