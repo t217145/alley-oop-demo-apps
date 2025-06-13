@@ -27,5 +27,15 @@ jobs:
           repository: ${{ inputs.repo_name }}
           ref: main
           token: ${{secrets.GITHUB_TOKEN}}
-          path: ./simple_java_app/
+          path: ./app
           github-server-url: ${{ inputs.repo_url }}
+
+  Compile:
+    needs: Checkout
+    environment: sandbox
+    steps:
+      - uses: docker://gradle:latest
+        shell: sh
+        run: |
+          cd ./app
+          ./gradlew clean build
