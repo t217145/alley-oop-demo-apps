@@ -31,7 +31,8 @@ jobs:
           github-server-url: ${{ inputs.repo_url }}
       - uses: docker://gradle:latest
         name: compile
-        shell: sh
+        with:
+            entrypoint: ''
         run: |
-          cd ./app
-          gradle clean build
+            cd ./app
+            gradle clean build
