@@ -24,8 +24,8 @@ jobs:
         name: checkout
         with:
           provider: github
-          repository: ${{inputs.repo_name}}
+          repository: ${{repo_name}}
           ref: master
           token: ${{secrets.GITHUB_TOKEN}}
           path: ./simple_java_app/
-          github-server-url: ${{inputs.repo_url}}
+          github-server-url: ${{repo_url}}
