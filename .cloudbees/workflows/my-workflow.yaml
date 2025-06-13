@@ -19,8 +19,7 @@ jobs:
           ./gradlew clean build
 
   upload-artifact:
-    description: Compile Kotlin and upload JAR to JFrog
-    needs: compile
+    environment: development
     steps:
       - name: Checkout sources
         uses: docker://adoptopenjdk:17-jdk-hotspot
