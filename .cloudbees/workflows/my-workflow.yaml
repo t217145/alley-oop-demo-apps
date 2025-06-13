@@ -7,7 +7,7 @@ on:
       - "**"
 jobs:
   test-actions:
-    environment: development
+    environment: sandbox
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
@@ -19,7 +19,7 @@ jobs:
           ./gradlew clean build
 
   upload-artifact:
-    environment: development
+    environment: sandbox
     steps:
       - name: Checkout sources
         uses: docker://adoptopenjdk:17-jdk-hotspot
