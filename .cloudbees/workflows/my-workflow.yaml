@@ -16,6 +16,16 @@ on:
         type: string
         default: https://github.com/
         description: Repository URL. Default is https://github.com
+      # suppose to read the jenkins.properties
+      appVersion:
+        type: string
+        default: "1.0"
+        description: Application version, suppose to read the jenkins.properties    
+      appName:
+        type: string
+        default: "app"
+        description: Application name, suppose to read the jenkins.properties  
+
 jobs:
   Compile:
     environment: sandbox
@@ -35,10 +45,10 @@ jobs:
             entrypoint: ''
         run: |
             cd ./app
-            gradle clean build -PjarName=app
+            gradle clean build -PappVersion=${{ inputs.appVersion }}  -PappName=app
             curl -fL https://getcli.jfrog.io | sh
             ./jfrog config add jfrog --url ${{ vars.JFROG_URL }} --access-token ${{ secrets.JFROG_TOKEN }} --interactive=false
-            ./jfrog rt u ./build/libs/app.jar ${{ vars.JFROG_REPO }}/app.jar
+            ./jfrog rt u ./build/libs/app-${{ inputs.appVersion }}.jar ${{ vars.JFROG_REPO }}/app-${{ inputs.appVersion }}.jar
             ./jfrog rt u ./Dockerfile ${{ vars.JFROG_REPO }}/Dockerfile    
     #   - name: Upload to JFrog
     #     uses: docker://nginx:latest
