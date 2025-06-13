@@ -6,6 +6,7 @@ plugins {
 }
 
 val appVersion: String by project
+val appName: String by project
 
 group = "com.hkjc.alleyoop"
 version = appVersion
@@ -42,6 +43,10 @@ kotlin {
 	compilerOptions {
 		freeCompilerArgs.addAll("-Xjsr305=strict")
 	}
+}
+
+tasks.withType<Jar> {
+        archiveBaseName.set(appName)
 }
 
 tasks.withType<Test> {
