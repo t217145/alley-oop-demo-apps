@@ -17,7 +17,7 @@ on:
         default: https://github.com/
         description: Repository URL. Default is https://github.com
 jobs:
-  Checkout-And-Compile:
+  Checkout:
     environment: sandbox
     steps:
       - uses: cloudbees-io/checkout@v1
@@ -29,6 +29,11 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           path: ./app
           github-server-url: ${{ inputs.repo_url }}
+
+  Compile:
+    needs: Checkout
+    environment: sandbox
+    steps:          
       - uses: docker://gradle:8.14.2-jdk17
         name: compile
         with:
