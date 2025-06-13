@@ -6,6 +6,7 @@ plugins {
 }
 
 val appVersion: String by project
+appVersion=1.0
 
 group = "com.hkjc.alleyoop"
 version = appVersion
