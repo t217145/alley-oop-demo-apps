@@ -25,7 +25,7 @@ jobs:
         with:
           provider: github
           repository: ${{ inputs.repo_name }}
-          ref: master
+          ref: main
           token: ${{secrets.GITHUB_TOKEN}}
           path: ./simple_java_app/
           github-server-url: ${{ inputs.repo_url }}
