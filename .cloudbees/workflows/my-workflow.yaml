@@ -34,4 +34,4 @@ jobs:
         shell: sh
         run: |
           cd ./app
-          ./gradlew clean build
+          sudo ./gradlew clean build
