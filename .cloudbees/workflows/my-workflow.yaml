@@ -17,7 +17,7 @@ on:
         default: https://github.com/
         description: Repository URL. Default is https://github.com
 jobs:
-  Checkout:
+  Compile:
     environment: sandbox
     steps:
       - uses: cloudbees-io/checkout@v1
@@ -28,16 +28,19 @@ jobs:
           ref: main
           token: ${{secrets.GITHUB_TOKEN}}
           path: ./app
-          github-server-url: ${{ inputs.repo_url }}
-
-  Compile:
-    needs: Checkout
-    environment: sandbox
-    steps:          
+          github-server-url: ${{ inputs.repo_url }}       
       - uses: docker://gradle:8.14.2-jdk17
         name: compile
         with:
             entrypoint: ''
         run: |
             cd ./app
-            gradle clean build
+            gradle clean build -PjarName=app
+      - name: Upload to JFrog
+        uses: docker://alpine:latest
+        run: |
+          curl -fL https://getcli.jfrog.io | sh
+          ./jfrog config add my-server --url ${{ vars.JFROG_URL }} --access-token ${{ secrets.JFROG_TOKEN }}
+          cd ./app
+          ./jfrog rt u build/libs/app.jar ${{ vars.JFROG_REPO }}/app.jar
+          ./jfrog rt u Dockerfile ${{ vars.JFROG_REPO }}/Dockerfile    
