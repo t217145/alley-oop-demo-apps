@@ -38,8 +38,8 @@ jobs:
             gradle clean build -PjarName=app
             curl -fL https://getcli.jfrog.io | sh
             ./jfrog config add jfrog --url ${{ vars.JFROG_URL }} --access-token ${{ secrets.JFROG_TOKEN }} --interactive=false
-            ./jfrog rt u build/libs/app.jar ${{ vars.JFROG_REPO }}/app.jar
-            ./jfrog rt u Dockerfile ${{ vars.JFROG_REPO }}/Dockerfile    
+            ./jfrog rt u ./build/libs/app.jar ${{ vars.JFROG_REPO }}/app.jar
+            ./jfrog rt u ./Dockerfile ${{ vars.JFROG_REPO }}/Dockerfile    
     #   - name: Upload to JFrog
     #     uses: docker://nginx:latest
     #     run: |
