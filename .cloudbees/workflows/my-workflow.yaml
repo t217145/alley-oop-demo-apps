@@ -36,10 +36,10 @@ jobs:
         run: |
             cd ./app
             gradle clean build -PjarName=app
-      - name: Upload to JFrog
-        uses: docker://nginx:latest
-        run: |
-          curl -fL https://getcli.jfrog.io | sh
-          ./jfrog config add jfrog --url ${{ vars.JFROG_URL }} --access-token ${{ secrets.JFROG_TOKEN }} --interactive=false
-          ./jfrog rt u ./app/build/libs/app.jar ${{ vars.JFROG_REPO }}/app.jar
-          ./jfrog rt u ./app/Dockerfile ${{ vars.JFROG_REPO }}/Dockerfile    
+            curl -fL https://getcli.jfrog.io | sh
+            ./jfrog config add jfrog --url ${{ vars.JFROG_URL }} --access-token ${{ secrets.JFROG_TOKEN }} --interactive=false
+            ./jfrog rt u ./app/build/libs/app.jar ${{ vars.JFROG_REPO }}/app.jar
+            ./jfrog rt u ./app/Dockerfile ${{ vars.JFROG_REPO }}/Dockerfile    
+    #   - name: Upload to JFrog
+    #     uses: docker://nginx:latest
+    #     run: |
