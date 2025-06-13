@@ -5,8 +5,10 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 }
 
+val appVersion: String by project
+
 group = "com.hkjc.alleyoop"
-version = "0.0.1-SNAPSHOT"
+version = appVersion
 
 java {
 	toolchain {
