@@ -1,13 +1,13 @@
-name: Kotlin Build + Container Build + Store Artifacts
-
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: workflow
+name: My automation
 on:
   push:
     branches:
-      - '**'
-
+      - "**"
 jobs:
-  compile:
-    description: Compile Kotlin and upload JAR to JFrog
+  test-actions:
+    environment: development
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
