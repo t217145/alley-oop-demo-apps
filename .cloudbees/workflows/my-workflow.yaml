@@ -24,8 +24,8 @@ jobs:
         name: checkout
         with:
           provider: github
-          repository: ${{cloudbees.event.inputs.repo_name}}
+          repository: ${{cloudbees.inputs.repo_name}}
           ref: master
           token: ${{secrets.GITHUB_TOKEN}}
           path: ./simple_java_app/
-          github-server-url: ${{cloudbees.event.inputs.repo_url}}
+          github-server-url: ${{cloudbees.inputs.repo_url}}
