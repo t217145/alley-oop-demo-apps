@@ -48,8 +48,8 @@ jobs:
             gradle clean build -PappVersion=${{ inputs.appVersion }}  -PappName=app
             curl -fL https://getcli.jfrog.io | sh
             ./jfrog config add jfrog --url ${{ vars.JFROG_URL }} --access-token ${{ secrets.JFROG_TOKEN }} --interactive=false
-            ./jfrog rt u ./build/libs/app-${{ inputs.appVersion }}.jar ${{ vars.JFROG_REPO }}/app-${{ inputs.appVersion }}.jar
-            ./jfrog rt u ./Dockerfile ${{ vars.JFROG_REPO }}/Dockerfile    
+            echo "testing" > test2.txt
+            ./jfrog rt u test2.txt ${{ vars.JFROG_REPO }}/test2.txt   
     #   - name: Upload to JFrog
     #     uses: docker://nginx:latest
     #     run: |
