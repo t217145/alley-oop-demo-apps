@@ -46,6 +46,7 @@ jobs:
         run: |
             cd ./app
             gradle clean build -PappVersion=${{ inputs.appVersion }}  -PappName=${{ inputs.appName }}
+            pwd
             ls -l ./app
       - name: Upload Jar to JFrog Artifactory
         uses: https://github.com/cloudbees-io/jfrog-artifactory-upload-file@v1
