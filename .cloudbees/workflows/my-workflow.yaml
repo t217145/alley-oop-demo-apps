@@ -47,8 +47,8 @@ jobs:
             cd ./app
             gradle clean build -PappVersion=${{ inputs.appVersion }}  -PappName=${{ inputs.appName }}
             echo "${{ secrets.JFROG_TOKEN }}"
-            echo "${{ vars.JFROG_URL }}/artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile"
-            echo "${{ vars.JFROG_URL }}/artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar"
+            echo "${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile"
+            echo "${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar"
             echo "./build/libs/${{ inputs.appName }}-${{ inputs.appVersion }}.jar"
             ls -l
             ls -l ./build/libs/
