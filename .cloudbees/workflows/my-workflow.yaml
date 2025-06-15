@@ -48,6 +48,13 @@ jobs:
             gradle clean build -PappVersion=${{ inputs.appVersion }}  -PappName=${{ inputs.appName }}
             pwd
             ls -l
+      - name: Upload Dockerfile to JFrog Artifactory
+        uses: https://github.com/cloudbees-io/jfrog-artifactory-upload-file@v1
+        with:
+          url: ${{ vars.JFROG_URL }}
+          token: ${{ secrets.JFROG_TOKEN }}
+          artifactory-path: ${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}
+          file-path: /cloudbees/workspace/app/Dockerfile            
       - name: Upload Jar to JFrog Artifactory
         uses: https://github.com/cloudbees-io/jfrog-artifactory-upload-file@v1
         with:
@@ -55,10 +62,3 @@ jobs:
           token: ${{ secrets.JFROG_TOKEN }}
           artifactory-path: ${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}
           file-path: /cloudbees/workspace/app/build/libs/${{ inputs.appName }}-${{ inputs.appVersion }}.jar
-      - name: Upload Dockerfile to JFrog Artifactory
-        uses: https://github.com/cloudbees-io/jfrog-artifactory-upload-file@v1
-        with:
-          url: ${{ vars.JFROG_URL }}
-          token: ${{ secrets.JFROG_TOKEN }}
-          artifactory-path: ${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}
-          file-path: /cloudbees/workspace/app/Dockerfile
