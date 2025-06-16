@@ -29,6 +29,12 @@ on:
 jobs:
   Compile:
     environment: sandbox
+    outputs:
+      output-critical: ${{ steps.sonarscan.outputs.critical-count }}
+      output-very-high: ${{ steps.sonarscan.outputs.very-high-count }}
+      output-high: ${{ steps.sonarscan.outputs.high-count }}
+      output-medium: ${{ steps.sonarscan.outputs.medium-count }}
+      output-low: ${{ steps.sonarscan.outputs.low-count }}		
     steps:
       - uses: cloudbees-io/checkout@v1
         name: checkout
@@ -40,8 +46,16 @@ jobs:
           path: ./app
           github-server-url: ${{ inputs.repo_url }}
       - name: Scan with SonarQube bundled
-        uses: https://github.com/cloudbees-io/sonarqube-bundled-sast-scan-code@v1
+        uses: https://github.com/cloudbees-io/sonarqube-bundled-sast-scan-code@v2
         with:
-          sonar-exclusion: sonar/*
-          cover-file-name: ./coverage.xml
-          language: LANGUAGE_JAVA 
+          language: LANGUAGE_JAVA
+      - id: print-sonarqube-result
+        name: Print SonarQube Result
+        uses: docker://alpine:latest
+        run: |
+            echo "Outputs from upstream SonarQube step:"
+            echo "Critical Count: ${{steps.sonarscan.outputs.critical-count}}"
+            echo "Very High Count: ${{steps.sonarscan.outputs.very-high-count}}"
+            echo "High Count: ${{steps.sonarscan.outputs.high-count}}"
+            echo "Medium Count: ${{steps.sonarscan.outputs.medium-count}}"
+            echo "Low Count: ${{steps.sonarscan.outputs.low-count}}"
