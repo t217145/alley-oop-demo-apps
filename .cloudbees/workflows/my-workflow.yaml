@@ -51,6 +51,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker://docker:dind
         with:
+          entrypoint: ''
           args: |
             args: --privileged
             sh -c "
