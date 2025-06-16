@@ -37,16 +37,14 @@ jobs:
       - uses: docker://docker:dind
         name: docker-build
         with:
-            entrypoint: |
-                --privileged
-                sh -c "
-                    export DOCKER_HOST=tcp://localhost:2375
-                    docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} ${{ vars.JFROG_DOMAIN }}
-                
-                    wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' ${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar -O app.jar
-                    wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' ${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile -O Dockerfile
+            args: "--privileged"
+        shell: |
+            export DOCKER_HOST=tcp://localhost:2375
+            docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} ${{ vars.JFROG_DOMAIN }}
+        
+            wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' ${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar -O app.jar
+            wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' ${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile -O Dockerfile
 
-                    docker build -t ${{ vars.JFROG_DOMAIN }}/${{ vars.CONTAINER_REPO }}/${{ inputs.appName }}:${{ inputs.appVersion }} -f Dockerfile .
-                
-                    docker push ${{ vars.JFROG_DOMAIN }}/${{ vars.CONTAINER_REPO }}/${{ inputs.appName }}:${{ inputs.appVersion }}
-                "
+            docker build -t ${{ vars.JFROG_DOMAIN }}/${{ vars.CONTAINER_REPO }}/${{ inputs.appName }}:${{ inputs.appVersion }} -f Dockerfile .
+        
+            docker push ${{ vars.JFROG_DOMAIN }}/${{ vars.CONTAINER_REPO }}/${{ inputs.appName }}:${{ inputs.appVersion }}
