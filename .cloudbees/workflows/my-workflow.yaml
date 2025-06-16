@@ -53,7 +53,8 @@ jobs:
           SONAR_HOST_URL: https://sonarcloud.io/
         with:
           args: "-v /cloudbees/workspace/app:/usr/src" 
-          entrypoint: ""
+        run: |
+        
       # - name: SonarCloud
       #   uses: https://github.com/cloudbees-io/sonarqube-sast-scan-code@v1
       #   with:
