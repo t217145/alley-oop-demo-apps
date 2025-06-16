@@ -15,7 +15,7 @@ on:
       repo_url:
         type: string
         default: https://github.com/
-        description: Repository URL. Default is https://github.com/
+        description: Repository URL. Default is https://github.com
       # suppose to read the jenkins.properties
       appVersion:
         type: string
@@ -29,12 +29,6 @@ on:
 jobs:
   Compile:
     environment: sandbox
-    outputs:
-      output-critical: ${{ steps.sonarscan.outputs.critical-count }}
-      output-very-high: ${{ steps.sonarscan.outputs.very-high-count }}
-      output-high: ${{ steps.sonarscan.outputs.high-count }}
-      output-medium: ${{ steps.sonarscan.outputs.medium-count }}
-      output-low: ${{ steps.sonarscan.outputs.low-count }}		
     steps:
       - uses: cloudbees-io/checkout@v1
         name: checkout
@@ -44,7 +38,7 @@ jobs:
           ref: main
           token: ${{secrets.GITHUB_TOKEN}}
           path: ./app
-          github-server-url: ${{ inputs.repo_url }} 
+          github-server-url: ${{ inputs.repo_url }}
       - id: sonarcloud
         name: SonarCloud
         uses: docker://nginx:latest
@@ -54,8 +48,7 @@ jobs:
           curl -o cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-7.1.0.4889-linux-x64.zip
           unzip cli.zip 
           cd sonar-scanner-7.1.0.4889-linux-x64/bin
-          git clone ${{ inputs.repo_url }}${{ inputs.repo_name }}.git apps
-
+          git clone https://${{vars.GITHUB_ACCOUNT}}:${{secrets.GITHUB_TOKEN}}@github.com/${{ inputs.repo_name }}.git apps
           ./sonar-scanner -Dsonar.token=${{ secrets.SONARQUBE_TOKEN}} -Dproject.settings=apps/sonar-project.properties -Dsonar.projectBaseDir=apps -Dsonar.host.url=https://sonarcloud.io/
       - id: sonarscan
         name: Scan with SonarQube bundled
@@ -71,4 +64,32 @@ jobs:
             echo "Very High Count: ${{steps.sonarscan.outputs.very-high-count}}"
             echo "High Count: ${{steps.sonarscan.outputs.high-count}}"
             echo "Medium Count: ${{steps.sonarscan.outputs.medium-count}}"
-            echo "Low Count: ${{steps.sonarscan.outputs.low-count}}"
+            echo "Low Count: ${{steps.sonarscan.outputs.low-count}}"            
+      - uses: docker://gradle:8.14.2-jdk17
+        name: compile
+        with:
+            entrypoint: ''
+        run: |
+            cd ./app
+            gradle clean build -PappVersion=${{ inputs.appVersion }}  -PappName=${{ inputs.appName }}
+            curl -H "X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}" -X PUT "${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile" -T Dockerfile
+            curl -H "X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}" -X PUT "${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar" -T ./build/libs/${{ inputs.appName }}-${{ inputs.appVersion }}.jar
+      - name: Download
+        uses: docker://nginx:latest
+        with:
+            entrypoint: ''
+        run: |
+            apt-get update -y && apt-get upgrade -y
+            apt-get install wget
+            wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' -O Dockerfile '${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile'
+            wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' -O app.jar '${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar'
+      - name: Login to JFrog Container Reop
+        uses: https://github.com/cloudbees-io/configure-oci-credentials@v1
+        with:
+            registry: ${{ vars.JFROG_DOMAIN }}
+            username: ${{ vars.DOCKER_USERNAME }}
+            password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Push image to JFrog
+        uses: https://github.com/cloudbees-io/kaniko@v1
+        with:
+            destination: ${{ vars.JFROG_DOMAIN }}/${{ vars.CONTAINER_REPO }}/${{ inputs.appName }}:${{ inputs.appVersion }}
