@@ -38,6 +38,7 @@ jobs:
         name: docker-build
         with:
             args: "--privileged"
+            entrypoint: ''
         shell: |
             export DOCKER_HOST=tcp://localhost:2375
             docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} ${{ vars.JFROG_DOMAIN }}
