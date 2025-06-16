@@ -40,7 +40,6 @@ jobs:
             entrypoint: |
                 --privileged
                 sh -c "
-                    echo "docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} ${{ vars.JFROG_DOMAIN }}"
                     export DOCKER_HOST=tcp://localhost:2375
                     docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} ${{ vars.JFROG_DOMAIN }}
                 
