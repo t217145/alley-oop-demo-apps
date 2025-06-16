@@ -47,11 +47,12 @@ jobs:
           github-server-url: ${{ inputs.repo_url }} 
       - id: sonarcloud
         name: SonarCloud
-        uses: docker://nginx:latest
+        uses: docker://sonarsource/sonar-scanner-cli
         env:
           SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
           SONAR_HOST_URL: https://sonarcloud.io/
         with:
+            args: "-v '/cloudbees/workspace/app:/usr/src'"
             entrypoint: ''
         run: |
           ls -l
