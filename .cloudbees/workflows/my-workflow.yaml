@@ -37,7 +37,7 @@ jobs:
       - uses: docker://docker:dind
         name: docker-build
         with:
-            entrypoint: ''
+            entrypoint: "--privileged"
         shell: |
             export DOCKER_HOST=tcp://localhost:2375
             docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} ${{ vars.JFROG_DOMAIN }}
