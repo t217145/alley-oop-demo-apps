@@ -45,7 +45,8 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           path: ./app
           github-server-url: ${{ inputs.repo_url }}
-      - name: Scan with SonarQube bundled
+      - id: sonarscan
+        name: Scan with SonarQube bundled
         uses: https://github.com/cloudbees-io/sonarqube-bundled-sast-scan-code@v2
         with:
           language: LANGUAGE_JAVA
