@@ -38,7 +38,13 @@ jobs:
           ref: main
           token: ${{secrets.GITHUB_TOKEN}}
           path: ./app
-          github-server-url: ${{ inputs.repo_url }}       
+          github-server-url: ${{ inputs.repo_url }}
+      - name: Scan with SonarQube bundled
+        uses: https://github.com/cloudbees-io/sonarqube-bundled-sast-scan-code@v1
+        with:
+          sonar-exclusion: sonar/*
+          cover-file-name: ./coverage.xml
+          language: LANGUAGE_JAVA             
       - uses: docker://gradle:8.14.2-jdk17
         name: compile
         with:
