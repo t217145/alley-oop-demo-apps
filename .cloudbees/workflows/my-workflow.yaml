@@ -45,6 +45,12 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           path: ./app
           github-server-url: ${{ inputs.repo_url }} 
+      - id: print-dir
+        name: Print Dir
+        uses: docker://alpine:latest
+        run: |
+            pwd
+            ls -       
       - name: SonarCloud
         uses: https://github.com/cloudbees-io/sonarqube-sast-scan-code@v1
         with:
