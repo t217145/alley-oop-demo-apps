@@ -37,8 +37,7 @@ jobs:
       - uses: docker://docker:dind
         name: docker-build
         with:
-            entrypoint: ''
-            args: |
+            entrypoint: |
                 --privileged
                 sh -c "
                     echo "docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} ${{ vars.JFROG_DOMAIN }}"
