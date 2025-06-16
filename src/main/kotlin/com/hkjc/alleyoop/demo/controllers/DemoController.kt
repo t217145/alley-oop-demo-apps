@@ -14,4 +14,9 @@ class DemoController(@Value("\${demo.myVar}") private val myVar: String) {
         val message = "Hello ${request.name}, you are ${request.age} years old"
         return DemoResponse(msg = message, myVar = myVar)
     }
+
+    @GetMapping("/", "/index")
+    fun sayHelloGet(): String {
+        return "Hello World"
+    }
 }
