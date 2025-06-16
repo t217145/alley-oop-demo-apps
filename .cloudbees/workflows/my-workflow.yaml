@@ -48,18 +48,3 @@ jobs:
             gradle clean build -PappVersion=${{ inputs.appVersion }}  -PappName=${{ inputs.appName }}
             curl -H "X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}" -X PUT "${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile" -T Dockerfile
             curl -H "X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}" -X PUT "${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar" -T ./build/libs/${{ inputs.appName }}-${{ inputs.appVersion }}.jar
-      - name: Build and push Docker image
-        uses: docker://docker:dind
-        with:
-          entrypoint: ''
-          args: |
-            args: --privileged
-          run: |
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} ${{ vars.JFROG_DOMAIN }}
-          
-            wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' ${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar -O app.jar
-            wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' ${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile -O Dockerfile
-
-            docker build -t ${{ vars.JFROG_DOMAIN }}/${{ vars.CONTAINER_REPO }}/${{ inputs.appName }}:${{ inputs.appVersion }} -f Dockerfile .
-            
-            docker push ${{ vars.JFROG_DOMAIN }}/${{ vars.CONTAINER_REPO }}/${{ inputs.appName }}:${{ inputs.appVersion }}
