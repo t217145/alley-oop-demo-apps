@@ -45,18 +45,20 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           path: ./app
           github-server-url: ${{ inputs.repo_url }} 
-      - id: print-dir
-        name: Print Dir
-        uses: docker://alpine:latest
-        run: |
-            pwd
-            ls -l    
-      - name: SonarCloud
-        uses: https://github.com/cloudbees-io/sonarqube-sast-scan-code@v1
+      - id: sonarcloud
+        name: SonarCloud
+        uses: docker://sonarsource/sonar-scanner-cli
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io/
         with:
-          server-url: https://sonarcloud.io/
-          access-token: ${{ secrets.SONARQUBE_TOKEN }}
-          language: "LANGUAGE_JAVA"
+          args: "-v /cloudbees/workspace/app:/usr/src" 
+      # - name: SonarCloud
+      #   uses: https://github.com/cloudbees-io/sonarqube-sast-scan-code@v1
+      #   with:
+      #     server-url: https://sonarcloud.io/
+      #     access-token: ${{ secrets.SONARQUBE_TOKEN }}
+      #     language: "LANGUAGE_JAVA"
       - id: sonarscan
         name: Scan with SonarQube bundled
         uses: https://github.com/cloudbees-io/sonarqube-bundled-sast-scan-code@v2
