@@ -29,6 +29,10 @@ on:
 jobs:
   Compile:
     environment: sandbox
+    services:
+        docker:
+            image: docker:dind
+            args: "--privileged"
     steps:
       - uses: docker://docker:dind
         name: docker-build
@@ -36,6 +40,7 @@ jobs:
             entrypoint: ''
         run: |
             echo "docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} ${{ vars.JFROG_DOMAIN }}"
+            export DOCKER_HOST=tcp://localhost:2375
             docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} ${{ vars.JFROG_DOMAIN }}
         
             wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' ${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar -O app.jar
