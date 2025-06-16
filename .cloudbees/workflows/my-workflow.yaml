@@ -54,6 +54,7 @@ jobs:
         name: Print SonarQube Result
         uses: docker://alpine:latest
         run: |
+            curl http://localhost:8000/dashboard?id=local
             echo "Outputs from upstream SonarQube step:"
             echo "Critical Count: ${{steps.sonarscan.outputs.critical-count}}"
             echo "Very High Count: ${{steps.sonarscan.outputs.very-high-count}}"
