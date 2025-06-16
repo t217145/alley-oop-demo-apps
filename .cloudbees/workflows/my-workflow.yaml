@@ -53,7 +53,6 @@ jobs:
           SONAR_HOST_URL: https://sonarcloud.io/
         with:
             args: "-v '/cloudbees/workspace/app:/usr/src'"
-            entrypoint: ''
         run: |
           ls -l
       # - name: SonarCloud
