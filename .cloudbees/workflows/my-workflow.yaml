@@ -43,6 +43,7 @@ jobs:
           repository: ${{ inputs.repo_name }}
           ref: main
           token: ${{secrets.GITHUB_TOKEN}}
+          path: ./app
           github-server-url: ${{ inputs.repo_url }} 
       - name: SonarCloud
         uses: https://github.com/cloudbees-io/sonarqube-sast-scan-code@v1
