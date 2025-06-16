@@ -31,13 +31,13 @@ jobs:
     environment: sandbox
     steps:
         - name: Login to GitHub Container Registry
-          uses: https://github.com/docker/login-action@v3
+          uses: https://github.com/docker/login-action
           with:
             registry: ${{ vars.JFROG_DOMAIN }}
             username: ${{ vars.DOCKER_USERNAME }}
             password: ${{ secrets.DOCKER_TOKEN }}
         - name: Set up Docker Buildx
-          uses: https://github.com/docker/setup-buildx-action@v3
+          uses: https://github.com/docker/setup-buildx-action
         - name: Download
           uses: docker://nginx:latest
           with:
@@ -46,7 +46,7 @@ jobs:
             wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' ${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar -O app.jar
             wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' ${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile -O Dockerfile
         - name: Build and push
-          uses: https://github.com/docker/build-push-action@v6
+          uses: https://github.com/docker/build-push-action
           with:
             push: true
             tags: ${{ vars.JFROG_DOMAIN }}/${{ vars.CONTAINER_REPO }}/${{ inputs.appName }}:${{ inputs.appVersion }}
