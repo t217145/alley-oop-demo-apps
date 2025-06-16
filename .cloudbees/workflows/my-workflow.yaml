@@ -52,8 +52,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
           SONAR_HOST_URL: https://sonarcloud.io/
         with:
-          #args: "-v /cloudbees/workspace/app:/usr/src" 
-          entrypoint: ''
+            #args: "-v /cloudbees/workspace/app:/usr/src" 
+            entrypoint: ''
         run: |
 
       # - name: SonarCloud
