@@ -30,24 +30,6 @@ jobs:
   Compile:
     environment: sandbox
     steps:
-      - uses: cloudbees-io/checkout@v1
-        name: checkout
-        with:
-          provider: github
-          repository: ${{ inputs.repo_name }}
-          ref: main
-          token: ${{secrets.GITHUB_TOKEN}}
-          path: ./app
-          github-server-url: ${{ inputs.repo_url }}       
-      - uses: docker://gradle:8.14.2-jdk17
-        name: compile
-        with:
-            entrypoint: ''
-        run: |
-            cd ./app
-            gradle clean build -PappVersion=${{ inputs.appVersion }}  -PappName=${{ inputs.appName }}
-            curl -H "X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}" -X PUT "${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile" -T Dockerfile
-            curl -H "X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}" -X PUT "${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar" -T ./build/libs/${{ inputs.appName }}-${{ inputs.appVersion }}.jar
       - uses: docker://docker:dind
         name: docker-build
         with:
