@@ -1,6 +1,6 @@
 FROM openjdk:17-jdk-slim
 
-COPY build/libs/app.jar app.jar
+COPY app.jar app.jar
 
 EXPOSE 8080
 

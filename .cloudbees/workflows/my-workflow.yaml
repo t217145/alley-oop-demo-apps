@@ -57,17 +57,13 @@ jobs:
             apt-get install wget
             wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' -O Dockerfile '${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile'
             wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' -O app.jar '${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar'
-            cat Dockerfile
-            mkdir build
-            mkdir build/libs
-            wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' -O ./build/libs/app.jar '${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar'
-      - name: Set up Docker Hub registry
+      - name: Login to JFrog Container Reop
         uses: https://github.com/cloudbees-io/configure-oci-credentials@v1
         with:
             registry: ${{ vars.JFROG_DOMAIN }}
             username: ${{ vars.DOCKER_USERNAME }}
             password: ${{ secrets.DOCKER_TOKEN }}
-      - name: Push image to OCI registry
+      - name: Push image to JFrog
         uses: https://github.com/cloudbees-io/kaniko@v1
         with:
             destination: ${{ vars.JFROG_DOMAIN }}/${{ vars.CONTAINER_REPO }}/${{ inputs.appName }}:${{ inputs.appVersion }}
