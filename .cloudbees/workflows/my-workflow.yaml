@@ -31,7 +31,7 @@ jobs:
     environment: sandbox
     services:
         docker:
-            image: docker://docker:dind
+            image: docker:dind
             args: "--privileged"
     steps:
       - uses: docker://docker:20.10
