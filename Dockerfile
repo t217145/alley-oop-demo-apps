@@ -2,7 +2,7 @@ FROM openjdk:17-jdk-alpine
 
 WORKDIR /usr/src/app
 
-COPY app.jar app.jar
+COPY build/libs/app.jar app.jar
 
 EXPOSE 8080
 
