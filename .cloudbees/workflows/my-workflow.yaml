@@ -38,10 +38,8 @@ jobs:
             apt-get update -y && apt-get upgrade -y
             apt-get install wget
             wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' -O Dockerfile '${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile'
-            ls -l
             mkdir build
-            mkdir libs
-            ls -l build/libs
+            mkdir build/libs
             wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' -O ./build/libs/app.jar '${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar'
             ls -l build/libs
         - name: Set up Docker Hub registry
