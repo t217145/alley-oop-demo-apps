@@ -31,12 +31,14 @@ jobs:
     environment: sandbox
     steps:
         - name: Download
-          uses: docker://gradle:8.14.2-jdk17
+          uses: docker://nginx:latest
           with:
             entrypoint: ''
           run: |
-            curl -H 'X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' ${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar -O app.jar
-            curl -H 'X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' ${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile -O Dockerfile
+            agt-get update -y && apt-get upgrade -y
+            apt-get install wget
+            wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' -O app.jar '${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar'
+            wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' -O Dockerfile '${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile'
         - name: Set up Docker Hub registry
           uses: https://github.com/cloudbees-io/configure-oci-credentials@v1
           with:
