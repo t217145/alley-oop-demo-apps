@@ -15,7 +15,7 @@ on:
       repo_url:
         type: string
         default: https://github.com/
-        description: Repository URL. Default is https://github.com
+        description: Repository URL. Default is https://github.com/
       # suppose to read the jenkins.properties
       appVersion:
         type: string
@@ -47,18 +47,16 @@ jobs:
           github-server-url: ${{ inputs.repo_url }} 
       - id: sonarcloud
         name: SonarCloud
-        uses: docker://sonarsource/sonar-scanner-cli
-        env:
-          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
-          SONAR_HOST_URL: https://sonarcloud.io/
-        with:
-            entrypoint: "-v '/cloudbees/workspace/app:/usr/src'"
-      # - name: SonarCloud
-      #   uses: https://github.com/cloudbees-io/sonarqube-sast-scan-code@v1
-      #   with:
-      #     server-url: https://sonarcloud.io/
-      #     access-token: ${{ secrets.SONARQUBE_TOKEN }}
-      #     language: "LANGUAGE_JAVA"
+        uses: docker://nginx:latest
+        run: |
+          apt update -y && apt upgrade -y
+          apt install git -y && apt install unzip -y
+          curl -o cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-7.1.0.4889-linux-x64.zip
+          unzip cli.zip 
+          cd sonar-scanner-7.1.0.4889-linux-x64/bin
+          git clone ${{ inputs.repo_url }}${{ inputs.repo_name }}.git apps
+
+          ./sonar-scanner -Dsonar.token=${{ secrets.SONARQUBE_TOKEN}} -Dproject.settings=apps/sonar-project.properties -Dsonar.projectBaseDir=apps -Dsonar.host.url=https://sonarcloud.io/
       - id: sonarscan
         name: Scan with SonarQube bundled
         uses: https://github.com/cloudbees-io/sonarqube-bundled-sast-scan-code@v2
