@@ -1,6 +1,4 @@
-FROM openjdk:17-jdk-alpine
-
-WORKDIR /usr/src/app
+FROM openjdk:17-jdk-slim
 
 COPY build/libs/app.jar app.jar
 
