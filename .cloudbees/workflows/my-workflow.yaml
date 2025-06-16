@@ -37,7 +37,7 @@ jobs:
       - uses: docker://docker:dind
         name: docker-build
         with:
-            entrypoint: ""
+            entrypoint: "/bin/sh"
             args: "--privileged"
         shell: |
             export DOCKER_HOST=tcp://localhost:2375
