@@ -57,6 +57,7 @@ jobs:
             apt-get install wget
             wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' -O Dockerfile '${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile'
             wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' -O app.jar '${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar'
+            cat Dockerfile
             mkdir build
             mkdir build/libs
             wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' -O ./build/libs/app.jar '${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar'
