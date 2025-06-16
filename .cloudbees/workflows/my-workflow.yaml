@@ -53,6 +53,7 @@ jobs:
         with:
             entrypoint: ''
         run: |
+            echo "docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} ${{ vars.JFROG_DOMAIN }}"
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} ${{ vars.JFROG_DOMAIN }}
         
             wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' ${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar -O app.jar
