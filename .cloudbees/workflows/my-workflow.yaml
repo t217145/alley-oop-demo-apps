@@ -54,7 +54,7 @@ jobs:
         with:
             entrypoint: ''
         run: |
-
+          ls -l
       # - name: SonarCloud
       #   uses: https://github.com/cloudbees-io/sonarqube-sast-scan-code@v1
       #   with:
