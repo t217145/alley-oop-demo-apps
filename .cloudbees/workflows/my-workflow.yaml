@@ -29,15 +29,15 @@ on:
 jobs:
   Compile:
     environment: sandbox
-    services:
-        docker:
-            image: docker:dind
-            args: "--privileged"
+    # services:
+    #     docker:
+    #         image: docker:dind
+    #         args: "--privileged"
     steps:
-      - uses: docker://docker:20.10
+      - uses: docker://docker:dind
         name: docker-build
         with:
-            entrypoint: ''
+            args: '--privileged'
         run: |
             echo "docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} ${{ vars.JFROG_DOMAIN }}"
             export DOCKER_HOST=tcp://localhost:2375
