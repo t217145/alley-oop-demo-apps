@@ -50,7 +50,7 @@ jobs:
         uses: docker://alpine:latest
         run: |
             pwd
-            ls -       
+            ls -l    
       - name: SonarCloud
         uses: https://github.com/cloudbees-io/sonarqube-sast-scan-code@v1
         with:
