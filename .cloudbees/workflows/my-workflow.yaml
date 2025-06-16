@@ -30,11 +30,29 @@ jobs:
   Compile:
     environment: sandbox
     steps:
-        - name: Download
-          uses: docker://nginx:latest
-          with:
+      - uses: cloudbees-io/checkout@v1
+        name: checkout
+        with:
+          provider: github
+          repository: ${{ inputs.repo_name }}
+          ref: main
+          token: ${{secrets.GITHUB_TOKEN}}
+          path: ./app
+          github-server-url: ${{ inputs.repo_url }}       
+      - uses: docker://gradle:8.14.2-jdk17
+        name: compile
+        with:
             entrypoint: ''
-          run: |
+        run: |
+            cd ./app
+            gradle clean build -PappVersion=${{ inputs.appVersion }}  -PappName=${{ inputs.appName }}
+            curl -H "X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}" -X PUT "${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile" -T Dockerfile
+            curl -H "X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}" -X PUT "${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar" -T ./build/libs/${{ inputs.appName }}-${{ inputs.appVersion }}.jar
+      - name: Download
+        uses: docker://nginx:latest
+        with:
+            entrypoint: ''
+        run: |
             apt-get update -y && apt-get upgrade -y
             apt-get install wget
             wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' -O Dockerfile '${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile'
@@ -42,13 +60,13 @@ jobs:
             mkdir build/libs
             wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' -O ./build/libs/app.jar '${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar'
             ls -l build/libs
-        - name: Set up Docker Hub registry
-          uses: https://github.com/cloudbees-io/configure-oci-credentials@v1
-          with:
+      - name: Set up Docker Hub registry
+        uses: https://github.com/cloudbees-io/configure-oci-credentials@v1
+        with:
             registry: ${{ vars.JFROG_DOMAIN }}
             username: ${{ vars.DOCKER_USERNAME }}
             password: ${{ secrets.DOCKER_TOKEN }}
-        - name: Push image to OCI registry
-          uses: https://github.com/cloudbees-io/kaniko@v1
-          with:
+      - name: Push image to OCI registry
+        uses: https://github.com/cloudbees-io/kaniko@v1
+        with:
             destination: ${{ vars.JFROG_DOMAIN }}/${{ vars.CONTAINER_REPO }}/${{ inputs.appName }}:${{ inputs.appVersion }}
