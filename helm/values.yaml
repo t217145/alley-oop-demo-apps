@@ -1,0 +1,39 @@
+namespace: cicddemo
+appName: cicddemo
+
+containerArgs: []
+
+containers:
+  containerPort: 8080
+  imageRepository: https://alleyoopsanbox.jfrog.io/aop-container/cicddemo
+  imageTag: latest
+  replicas: 1
+
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 8080
+
+secrets:
+  enabled: false
+  data:
+
+pvc:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 10Gi
+  storageClassName: gp3
+  volumeMode: Filesystem
+  mountPath: /data
+
+ingress:
+  path: /
+
+lb:
+  healthcheck:
+    path: /actuator/health
+    port: 8080
+  tags: hkjc:hosting-environment=aws,hkjc:hosting-account=333347968576,hkjc:hosting-region=ap-east-1,hkjc:cost-centre=alley-oop,hkjc:system-code=aly.oop,hkjc:workload-owner=alley-oop,hkjc:product=jenkins,hkjc:domain=nonprod,hkjc:environment=sandbox
+  attr: load_balancing.cross_zone.enabled=true,deletion_protection.enabled=false,access_logs.s3.enabled=true,access_logs.s3.bucket=hkjc-wrk-sandbox-nonprod-access-logs-apea1,access_logs.s3.prefix=nlb-sb1-hk1-aly-oop-a-jenkins
+  name: nlb-sb1-hk1-aly-oop-a-jenkins
+  subnets: subnet-070806432ea4715f2,subnet-0af2ca8569307e2bb,subnet-06d367dc803b26ea9
