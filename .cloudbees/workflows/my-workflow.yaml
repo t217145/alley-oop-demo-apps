@@ -37,6 +37,7 @@ jobs:
       - uses: docker://docker:dind
         name: docker-build
         with:
+            entrypoint: ''
             args: |
                 --privileged
                 sh -c "
