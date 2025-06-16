@@ -17,6 +17,6 @@ class DemoController(@Value("\${demo.myVar}") private val myVar: String) {
 
     @GetMapping("/", "/index")
     fun sayHelloGet(): String {
-        return "Hello World"
+        return "Hello World 2"
     }
 }
