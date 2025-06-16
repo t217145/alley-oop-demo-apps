@@ -23,7 +23,7 @@ on:
         description: Application version, suppose to read the jenkins.properties    
       appName:
         type: string
-        default: "app"
+        default: "demo-app"
         description: Application name, suppose to read the jenkins.properties  
 
 jobs:
