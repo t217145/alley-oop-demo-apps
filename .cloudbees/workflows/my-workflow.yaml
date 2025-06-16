@@ -48,4 +48,5 @@ jobs:
         - name: Push image to OCI registry
           uses: https://github.com/cloudbees-io/kaniko@v1
           with:
-            destination: ${{ vars.JFROG_DOMAIN }}/${{ vars.CONTAINER_REPO }}/${{ inputs.appName }}:${{ inputs.appVersion }}
+            destination: ${{ vars.JFROG_DOMAIN }}/${{ vars.CONTAINER_REPO }}/${{ inputs.appName }}:${{ inputs.appVersion }},
+            dockerfile: ./Dockerfile
