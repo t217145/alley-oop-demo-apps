@@ -80,7 +80,7 @@ jobs:
             entrypoint: ''
         run: |
             apt-get update -y && apt-get upgrade -y
-            apt-get install wget
+            apt-get install wget -y
             wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' -O Dockerfile '${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/Dockerfile'
             wget --header='X-JFrog-Art-Api:${{ secrets.JFROG_TOKEN }}' -O app.jar '${{ vars.JFROG_URL }}artifactory/${{ vars.JFROG_REPO }}/${{ inputs.appName }}/${{ inputs.appVersion }}/${{ inputs.appName }}-${{ inputs.appVersion }}.jar'
       - name: Login to JFrog Container Reop
