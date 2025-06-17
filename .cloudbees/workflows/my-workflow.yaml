@@ -9,9 +9,9 @@ on:
     inputs:
       repo_name:
         type: string
-        default: t217145/alley-oop-demo-apps
+        default: Copilot-POC-Org/alley-oop-demo-apps
         required: true
-        description: Repository Name (do not include the https://github.com/) E.g. t217145/alley-oop-demo-apps
+        description: Repository Name (do not include the https://github.com/) E.g. Copilot-POC-Org/alley-oop-demo-apps
       repo_url:
         type: string
         default: https://github.com/
@@ -23,7 +23,7 @@ on:
         description: Application version, suppose to read the jenkins.properties    
       appName:
         type: string
-        default: "demo-app"
+        default: "alley-oop-demo-apps"
         description: Application name, suppose to read the jenkins.properties  
 
 jobs:
@@ -36,7 +36,7 @@ jobs:
           provider: github
           repository: ${{ inputs.repo_name }}
           ref: main
-          token: ${{secrets.GITHUB_TOKEN}}
+          token: ${{secrets.GITHUB_HKJC_TOKEN}}
           path: ./app
           github-server-url: ${{ inputs.repo_url }}
       - id: sonarcloud
@@ -48,7 +48,7 @@ jobs:
           curl -o cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-7.1.0.4889-linux-x64.zip
           unzip cli.zip 
           cd sonar-scanner-7.1.0.4889-linux-x64/bin
-          git clone https://${{vars.GITHUB_ACCOUNT}}:${{secrets.GITHUB_TOKEN}}@github.com/${{ inputs.repo_name }}.git apps
+          git clone https://${{vars.GITHUB_HKJC_ACCOUNT}}:${{secrets.GITHUB_HKJC_TOKEN}}@github.com/${{ inputs.repo_name }}.git apps
           ./sonar-scanner -Dsonar.token=${{ secrets.SONARQUBE_TOKEN}} -Dproject.settings=apps/sonar-project.properties -Dsonar.projectBaseDir=apps -Dsonar.host.url=https://sonarcloud.io/
       - id: sonarscan
         name: Scan with SonarQube bundled
