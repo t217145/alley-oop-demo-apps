@@ -108,10 +108,5 @@ jobs:
             git clone https://${{vars.GITHUB_HKJC_ACCOUNT}}:${{secrets.GITHUB_HKJC_TOKEN}}@github.com/Copilot-POC-Org/alley-oop-cicd-helm.git helm-chart
             cp -f apps/helm/values.yaml helm-chart/values.yaml
             cd helm-chart
-            ../helm registry login ${{ vars.JFROG_DOMAIN }} -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.HELM_REPO_TOKEN }}
-            git clone https://${{vars.GITHUB_ACCOUNT}}:${{secrets.GITHUB_TOKEN}}@github.com/${{ inputs.repo_name }}.git apps
-            git clone https://${{vars.GITHUB_HKJC_ACCOUNT}}:${{secrets.GITHUB_HKJC_TOKEN}}@github.com/Copilot-POC-Org/alley-oop-cicd-helm.git helm-chart
-            cp -f apps/helm/values.yaml helm-chart/values.yaml
-            cd helm-chart
             ../helm package .
             ../helm push alley-oop-app-0.0.1.tgz oci://${{ vars.JFROG_DOMAIN }}/aop-cicd-helm
