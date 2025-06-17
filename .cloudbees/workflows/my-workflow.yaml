@@ -23,7 +23,7 @@ on:
         description: Application version, suppose to read the jenkins.properties    
       appName:
         type: string
-        default: "alley-oop-demo-apps"
+        default: "demo-apps"
         description: Application name, suppose to read the jenkins.properties  
 
 jobs:
